@@ -43,7 +43,8 @@ Symptom json
 SymptomPoint json
     symptomId SymptomId
     value     Int
-    time      ZonedTime
+    time      TimeOfDay
+    day       Day
     deriving Show
 Food json
     name        String
