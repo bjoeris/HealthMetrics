@@ -156,7 +156,7 @@ putSymptomPointR _ symptomPointId = undefined
 
 deleteSymptomPointR :: SymptomId -> SymptomPointId -> Handler ()
 deleteSymptomPointR _ symptomPointId = undefined
-
+ 
 runApp :: Text -> IO ()
 runApp dbString = withSqlitePool dbString 10 $ \pool -> do
     runStdoutLoggingT $ runSqlPool (runMigration migrateAll) pool
