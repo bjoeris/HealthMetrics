@@ -67,7 +67,7 @@ MealIngredients json
 |]
 
 data PartialSymptomPoint =
-    PartialSymptomPoint Int Time Day
+    PartialSymptomPoint Int TimeOfDay Day
     deriving (Show,Generic)
 instance FromJSON PartialSymptomPoint
 
