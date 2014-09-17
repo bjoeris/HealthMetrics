@@ -11,7 +11,7 @@ ENV LANGUAGE        en_US.UTF-8
 RUN apt-get update\
  && apt-get install ${OPTS_APT}\
       git\
-      zlib1i-dev
+      zlib1g-dev
 
 RUN git pull https://github.com/bjoeris/HealthMetrics
 
