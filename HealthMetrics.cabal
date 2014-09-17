@@ -71,7 +71,8 @@ executable HealthMetrics
                        http-types,
                        yesod,
                        yesod-auth,
-                       network
+                       network,
+                       unordered-containers
   
   -- Directories containing source files.
   hs-source-dirs:      src
