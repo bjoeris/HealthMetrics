@@ -13,6 +13,8 @@ RUN apt-get update\
       git\
       zlib1g-dev
 
+RUN cabal update
+
 RUN git clone https://github.com/bjoeris/HealthMetrics.git
 
 RUN cd HealthMetrics\
