@@ -5,6 +5,7 @@
 {-# LANGUAGE QuasiQuotes           #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE DeriveGeneric         #-}
 
 -- | Main entry point to the application.
 module Main where
@@ -20,10 +21,12 @@ import           Data.Text                               (Text)
 import qualified Data.Text                               as T
 import qualified Data.XML.Types                          as X
 import           Database.Persist.Sqlite
-import           Database.Esquelto
 import           Text.Blaze.Html                         (preEscapedToHtml)
 import           Text.XML.Stream.Render                  (def, renderBuilder)
 import           Data.Time.LocalTime
+import           Data.Aeson                              (fromJSON)
+import qualified Data.HashMap.Strict as HashMap
+import           GHC.Generics
 import Network.HTTP.Types as Import
     ( status200
     , status201
@@ -60,6 +63,11 @@ MealIngredients json
     foodId FoodId
     amount Double
 |]
+
+data PartialSymptomPoint = 
+    PartialSymptomPoint Int ZonedTime
+    deriving (Show,Generic)
+instance FromJSON PartialSymptomPoint
 
 data App = App
     { connPool :: ConnectionPool
@@ -106,9 +114,7 @@ getSymptomsR = do
 
 postSymptomsR :: Handler Value
 postSymptomsR = do
-    liftIO $ print "foo"
     symptom <- parseJsonBody_ :: Handler Symptom
-    liftIO $ print "bar"
     symptomId <- runDB $ insert symptom
     sendResponseStatus status201 $ object ["symptomId" .= symptomId]
 
@@ -129,19 +135,27 @@ deleteSymptomR symptomId = do
     return "DELETED"
 
 getSymptomPointsR :: SymptomId -> Handler Value
-getSymptomPointsR = undefined
+getSymptomPointsR symptomId = do
+    symptomPoints <- runDB $ selectList [SymptomPointSymptomId ==. symptomId] [] :: Handler [Entity SymptomPoint]
+    return $ toJSON symptomPoints
 
-postSymptomPointsR :: SymptomId -> Handler Value
-postSymptomPointsR = undefined
+postSymptomPointsR :: SymptomId -> Handler ()
+postSymptomPointsR symptomId = do
+    partialSymptomPoint <- parseJsonBody_ :: Handler PartialSymptomPoint
+    let symptomPoint = 
+            case partialSymptomPoint of
+                PartialSymptomPoint value time -> SymptomPoint symptomId value time
+    symptomPointId <- runDB $ insert symptomPoint
+    sendResponseStatus status201 $ object ["symptomPointId" .= symptomPointId]
 
 getSymptomPointR :: SymptomId -> SymptomPointId -> Handler Value
-getSymptomPointR = undefined
+getSymptomPointR _ symptomPointId = undefined
 
 putSymptomPointR :: SymptomId -> SymptomPointId -> Handler ()
-putSymptomPointR = undefined
+putSymptomPointR _ symptomPointId = undefined
 
 deleteSymptomPointR :: SymptomId -> SymptomPointId -> Handler ()
-deleteSymptomPointR = undefined
+deleteSymptomPointR _ symptomPointId = undefined
 
 main :: IO ()
 main = withSqlitePool "health.db3" 10 $ \pool -> do
