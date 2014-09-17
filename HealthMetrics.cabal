@@ -58,20 +58,20 @@ executable HealthMetrics
   
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.7 && <4.8,
-                       hashmap == 1.3.*,
-                       monad-logger == 0.3.*,
-                       conduit == 1.0.*,
-                       text == 0.11.*,
-                       xml-types == 0.3.*,
-                       persistent-sqlite ==1.2.*,
-                       blaze-html ==0.6.*,
-                       xml-conduit ==1.1.*,
-                       time ==1.4.*,
-                       aeson ==0.6.*,
-                       http-types ==0.8.*,
-                       yesod ==1.2.4.*,
-                       yesod-auth ==1.2.4.*,
-                       network ==2.4.*
+                       hashmap,
+                       monad-logger,
+                       conduit,
+                       text,
+                       xml-types,
+                       persistent-sqlite,
+                       blaze-html*,
+                       xml-conduit,
+                       time,
+                       aeson,
+                       http-types,
+                       yesod,
+                       yesod-auth,
+                       network
   
   -- Directories containing source files.
   hs-source-dirs:      src
