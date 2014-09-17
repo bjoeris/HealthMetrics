@@ -13,7 +13,7 @@ RUN apt-get update\
       git\
       zlib1g-dev
 
-RUN git pull https://github.com/bjoeris/HealthMetrics.git
+RUN git clone https://github.com/bjoeris/HealthMetrics.git
 
 RUN cd HealthMetrics\
  && cabal install --only-dependencies
