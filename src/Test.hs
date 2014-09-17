@@ -3,10 +3,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Test where
+module Test (tests) where
 
+import Distribution.TestSuite.QuickCheck
 import Test.QuickCheck hiding ((><))
 import Test.QuickCheck.Monadic
+
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Time.LocalTime
@@ -279,3 +281,6 @@ prop_model actions = monadicIO $ do
                 assert (actualResult == expectedResult)
                 go model' actions'
         go initialModel actions
+
+tests :: IO [Test]
+tests = return [ testProperty "Model" prop_model ]
