@@ -64,7 +64,7 @@ MealIngredients json
     amount Double
 |]
 
-data PartialSymptomPoint = 
+data PartialSymptomPoint =
     PartialSymptomPoint Int ZonedTime
     deriving (Show,Generic)
 instance FromJSON PartialSymptomPoint
@@ -157,7 +157,10 @@ putSymptomPointR _ symptomPointId = undefined
 deleteSymptomPointR :: SymptomId -> SymptomPointId -> Handler ()
 deleteSymptomPointR _ symptomPointId = undefined
 
-main :: IO ()
-main = withSqlitePool "health.db3" 10 $ \pool -> do
+runApp :: Text -> IO ()
+runApp dbString = withSqlitePool dbString 10 $ \pool -> do
     runStdoutLoggingT $ runSqlPool (runMigration migrateAll) pool
     warpEnv $ App pool
+
+main :: IO ()
+main = runApp "health.db3"
