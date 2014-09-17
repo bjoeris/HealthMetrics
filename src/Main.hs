@@ -67,7 +67,7 @@ MealIngredients json
 |]
 
 data PartialSymptomPoint =
-    PartialSymptomPoint Int ZonedTime
+    PartialSymptomPoint Int Time Day
     deriving (Show,Generic)
 instance FromJSON PartialSymptomPoint
 
@@ -146,7 +146,7 @@ postSymptomPointsR symptomId = do
     partialSymptomPoint <- parseJsonBody_ :: Handler PartialSymptomPoint
     let symptomPoint = 
             case partialSymptomPoint of
-                PartialSymptomPoint value time -> SymptomPoint symptomId value time
+                PartialSymptomPoint value time d-> SymptomPoint symptomId value time
     symptomPointId <- runDB $ insert symptomPoint
     sendResponseStatus status201 $ object ["symptomPointId" .= symptomPointId]
 
