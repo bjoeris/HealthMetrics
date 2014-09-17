@@ -23,7 +23,7 @@ import qualified Data.XML.Types                          as X
 import           Database.Persist.Sqlite
 import           Text.Blaze.Html                         (preEscapedToHtml)
 import           Text.XML.Stream.Render                  (def, renderBuilder)
-import           Data.Time.LocalTime
+import           Data.Time
 import           Data.Aeson                              (fromJSON)
 import qualified Data.HashMap.Strict as HashMap
 import           GHC.Generics
