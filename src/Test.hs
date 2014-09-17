@@ -188,7 +188,7 @@ modelUpdate SymptomsPath method body
                                                             , "value" .= object ["name" .= symptomName v]])
                                           (Map.assocs (modelSymptoms model))])
         _ -> return $ EmptyResult badRequest400
-    | method == methodPost = 
+    | method == methodPost =
         let nameParser :: Value -> Parser String
             nameParser (Object v) = v .: "name"
             nameParser _ = mzero in

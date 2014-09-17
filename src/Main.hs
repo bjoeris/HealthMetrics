@@ -163,4 +163,5 @@ runApp dbString = withSqlitePool dbString 10 $ \pool -> do
     warpEnv $ App pool
 
 main :: IO ()
-main = runApp "health.db3"
+--main = runApp "health.db3"
+main = runApp ":memory:"
