@@ -20,8 +20,10 @@ import           Data.Text                               (Text)
 import qualified Data.Text                               as T
 import qualified Data.XML.Types                          as X
 import           Database.Persist.Sqlite
+import           Database.Esquelto
 import           Text.Blaze.Html                         (preEscapedToHtml)
 import           Text.XML.Stream.Render                  (def, renderBuilder)
+import           Data.Time.LocalTime
 import Network.HTTP.Types as Import
     ( status200
     , status201
@@ -35,21 +37,28 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Symptom json
     name String
     deriving Show
-SymptomPoint
-    seriesId SymptomId
-    value    Int
+SymptomPoint json
+    symptomId SymptomId
+    value     Int
+    time      ZonedTime
     deriving Show
-Food
-    name String
+Food json
+    name        String
     description String
-    ingredients [FoodId]
     deriving Show
-Meal
+FoodIngredients json
+    ownerId      FoodId
+    ingredientId FoodId
+    amount       Double
+Meal json
     pictureURL  String Maybe
     notes       String
     needsReview Bool
-    foods       [FoodId]
     deriving Show
+MealIngredients json
+    mealId MealId
+    foodId FoodId
+    amount Double
 |]
 
 data App = App
