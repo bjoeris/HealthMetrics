@@ -10,10 +10,7 @@ ENV LANGUAGE        en_US.UTF-8
 
 RUN apt-get update\
  && apt-get install ${OPTS_APT}\
+      git\
       zlibg1-dev
-      libc6\
-      libc6-dev\
-      libgmp10\
-      libgmp-dev\
-      libncursesw5\
-      libtinfo5
+
+RUN cabal-install 

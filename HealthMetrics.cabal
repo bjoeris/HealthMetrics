@@ -70,7 +70,8 @@ executable HealthMetrics
                        aeson ==0.6.*,
                        http-types ==0.8.*,
                        yesod ==1.2.4.*,
-                       yesod-auth ==1.2.4.*
+                       yesod-auth ==1.2.4.*,
+                       network ==2.4.*
   
   -- Directories containing source files.
   hs-source-dirs:      src
