@@ -22,7 +22,13 @@ import qualified Data.XML.Types                          as X
 import           Database.Persist.Sqlite
 import           Text.Blaze.Html                         (preEscapedToHtml)
 import           Text.XML.Stream.Render                  (def, renderBuilder)
-import qualified Data.Aeson as JSON
+import Network.HTTP.Types as Import
+    ( status200
+    , status201
+    , status400
+    , status403
+    , status404
+    )
 import           Yesod
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
@@ -53,8 +59,8 @@ data App = App
 
 mkYesod "App" [parseRoutes|
 / HomeR GET
-/add-symptom AddSymptomR POST
-/symptoms SymptomsR GET
+/symptoms SymptomsR GET POST
+/sytmtoms/#SymptomId SymptomR GET PUT DELETE
 |]
 
 instance Yesod App
@@ -82,8 +88,32 @@ getHomeR = do
 <p>Welcome to the health metrics application. #{symptoms}
 |]
 
-postAddDocR :: Handler JSON.Value
-postAddDocR = undefined
+getSymptomsR :: Handler Value
+getSymptomsR = do
+    symptoms <- runDB $ selectList [] [] :: Handler [Entity Symptom]
+    return $ object ["symptoms" .= symptoms]
+
+postSymptomsR :: Handler Value
+postSymptomsR = do
+    symptom <- parseJsonBody_ :: Handler Symptom
+    symptomId <- runDB $ insert symptom
+    sendResponseStatus status201 $ object ["symptomId" .= symptomId]
+
+getSymptomR :: SymptomId -> Handler Value
+getSymptomR symptomId = do
+    symptom <- runDB $ get404 symptomId
+    return $ toJSON symptom
+
+putSymptomR :: SymptomId -> Handler Text
+putSymptomR symptomId = do
+    symptom <- parseJsonBody_ :: Handler Symptom
+    _ <- runDB $ repsert symptomId symptom
+    return "UPDATED"
+
+deleteSymptomR :: SymptomId -> Handler Text
+deleteSymptomR symptomId = do
+    _ <- runDB $ delete symptomId
+    return "DELETED"
 
 -- | The main entry point.
 main :: IO ()
