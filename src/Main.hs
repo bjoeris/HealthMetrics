@@ -7,6 +7,7 @@
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 -- | Main entry point to the application.
 module Main where
