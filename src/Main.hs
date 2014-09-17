@@ -58,9 +58,11 @@ data App = App
 
 
 mkYesod "App" [parseRoutes|
-/ HomeR GET
-/symptoms SymptomsR GET POST
-/sytmtoms/#SymptomId SymptomR GET PUT DELETE
+/                                           HomeR GET
+/symptoms                                   SymptomsR GET POST
+/symptoms/#SymptomId                        SymptomR GET PUT DELETE
+/symptoms/#SymptomId/points                 SymptomPointsR GET POST
+/symptoms/#SymptomId/points/#SymptomPointId SymptomPointR GET PUT DELETE
 |]
 
 instance Yesod App
@@ -95,7 +97,9 @@ getSymptomsR = do
 
 postSymptomsR :: Handler Value
 postSymptomsR = do
+    liftIO $ print "foo"
     symptom <- parseJsonBody_ :: Handler Symptom
+    liftIO $ print "bar"
     symptomId <- runDB $ insert symptom
     sendResponseStatus status201 $ object ["symptomId" .= symptomId]
 
@@ -115,8 +119,22 @@ deleteSymptomR symptomId = do
     _ <- runDB $ delete symptomId
     return "DELETED"
 
--- | The main entry point.
+getSymptomPointsR :: SymptomId -> Handler Value
+getSymptomPointsR = undefined
+
+postSymptomPointsR :: SymptomId -> Handler Value
+postSymptomPointsR = undefined
+
+getSymptomPointR :: SymptomId -> SymptomPointId -> Handler Value
+getSymptomPointR = undefined
+
+putSymptomPointR :: SymptomId -> SymptomPointId -> Handler ()
+putSymptomPointR = undefined
+
+deleteSymptomPointR :: SymptomId -> SymptomPointId -> Handler ()
+deleteSymptomPointR = undefined
+
 main :: IO ()
-main = do
-    putStrLn "Welcome to FP Haskell Center!"
-    putStrLn "Have a good day!"
+main = withSqlitePool "health.db3" 10 $ \pool -> do
+    runStdoutLoggingT $ runSqlPool (runMigration migrateAll) pool
+    warpEnv $ App pool
